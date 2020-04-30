@@ -17,7 +17,7 @@ const DUMMY_PLACES = [
 ];
 
 const getPlaceById = (req, res, next) => {
-  const placeId = req.params.pid; // => { pid: 'p1' }
+  const placeId = req.params.placeId; // => { placeId: 'p1' }
 
   const place = DUMMY_PLACES.find(p => p.id === placeId);
 
@@ -27,7 +27,7 @@ const getPlaceById = (req, res, next) => {
 };
 
 const getPlaceByUserId = (req, res, next) => {
-  const userId = req.params.uid;
+  const userId = req.params.userId;
   const place = DUMMY_PLACES.find(p => p.creator === userId);
 
   if (!place) return next(new HttpError('Could not find a place for the provided user id.', 404)); // for asyncronous middle
@@ -52,8 +52,29 @@ const createPlace = (req, res, next) => {
   res.status(201).json({ place: createdPlace });
 };
 
+const updatePlace = (req, res, next) => {
+  const { title, description } = req.body;
+
+  const placeId = req.params.placeId;
+
+  const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }; // Update in a immutable way with { ...DUMMY_PLACES.fine() }
+  const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId);
+  updatedPlace.title = title;
+  updatedPlace.description = description;
+
+  DUMMY_PLACES[placeIndex] = updatedPlace; // replace old object with the new updated place.
+
+  res.status(200).json({ place: updatedPlace });
+};
+
+const deletePlace = (req, res, next) => {
+
+};
+
 module.exports = {
   getPlaceById: getPlaceById,
   getPlaceByUserId: getPlaceByUserId,
-  createPlace: createPlace
+  createPlace: createPlace,
+  updatePlace: updatePlace,
+  deletePlace: deletePlace,
 };

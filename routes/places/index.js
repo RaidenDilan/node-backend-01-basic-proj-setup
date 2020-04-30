@@ -3,9 +3,13 @@ const placesCtrl = require('../../controllers/places');
 
 const router = express.Router();
 
-router.get('/:pid', placesCtrl.getPlaceById);
+router.get('/:placeId', placesCtrl.getPlaceById);
 
-router.get('/user/:uid', placesCtrl.getPlaceByUserId);
+router.patch('/:placeId', placesCtrl.updatePlace);
+
+router.delete('/:placeId', placesCtrl.deletePlace);
+
+router.get('/user/:userId', placesCtrl.getPlaceByUserId);
 
 router.post('/', placesCtrl.createPlace);
 
