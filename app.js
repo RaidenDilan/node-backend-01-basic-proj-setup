@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const placesRoutes = require('./routes/places');
 
 const app = express();
-// app.use(bodyParser);
+
+app.use(bodyParser.json()); // parse any incoming request body and extract any data in there and turn into json.
 
 app.use('/api/places', placesRoutes); // => /api/places/...
 
@@ -12,10 +13,8 @@ app.use((err, req, res, next) => {
   if (res.headerSent) {
     return next(err);
   }
-
-  res
-    .status(err.code || 500)
-    .json({ message: err.message || 'An unknown error occurred!' });
+  res.status(err.code || 500);
+  res.json({ message: err.message || 'An unknown error occurred!' });
 });
 
 app.listen(3000);

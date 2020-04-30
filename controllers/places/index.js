@@ -1,23 +1,27 @@
+const { v4: uuid } = require('uuid');
+
+const HttpError = require('../../models/http-error');
+
 const DUMMY_PLACES = [
   {
     id: 'p1',
     title: 'Empire State Building',
     description: 'One of the most famous sky scrapers in the world!',
-    imageUrl: 'https://cdn.pixabay.com/photo/2015/12/08/00/40/empire-state-building-1081929_1280.jpg',
-    address: '20 W 34th St, New York, NY 10001, United States',
     location: {
-      lat: 40.7484405,
-      lng: -73.9878531
+      lat: 40.7484474,
+      lng: -73.9871516
     },
+    address: '20 W 34th St, New York, NY 10001',
     creator: 'u1'
   }
 ];
 
 const getPlaceById = (req, res, next) => {
   const placeId = req.params.pid; // => { pid: 'p1' }
+
   const place = DUMMY_PLACES.find(p => p.id === placeId);
 
-  if (!place) throw new Error('Could not find a place for the provided id.', 404); // for syncronous middle
+  if (!place) throw new HttpError('Could not find a place for the provided id.', 404); // for syncronous middle
 
   res.json({ place }); // => { place } => { place: place }
 };
@@ -26,14 +30,30 @@ const getPlaceByUserId = (req, res, next) => {
   const userId = req.params.uid;
   const place = DUMMY_PLACES.find(p => p.creator === userId);
 
-  if (!place) {
-    return next(new Error('Could not find a place for the provided user id.', 404)); // for asyncronous middle
-  }
+  if (!place) return next(new HttpError('Could not find a place for the provided user id.', 404)); // for asyncronous middle
 
   res.json({ place });
 };
 
+const createPlace = (req, res, next) => {
+  const { title, description, coordinates, address, creator } = req.body;
+
+  const createdPlace = {
+    id: uuid(),
+    title,
+    description,
+    location: coordinates,
+    address,
+    creator
+  };
+
+  DUMMY_PLACES.push(createdPlace); // DUMMY_PLACES.unshift(createdPlace);
+
+  res.status(201).json({ place: createdPlace });
+};
+
 module.exports = {
   getPlaceById: getPlaceById,
-  getPlaceByUserId: getPlaceByUserId
+  getPlaceByUserId: getPlaceByUserId,
+  createPlace: createPlace
 };
