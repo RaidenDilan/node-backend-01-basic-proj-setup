@@ -9,7 +9,7 @@ router.patch('/:placeId', placesCtrl.updatePlace);
 
 router.delete('/:placeId', placesCtrl.deletePlace);
 
-router.get('/user/:userId', placesCtrl.getPlaceByUserId);
+router.get('/user/:userId', placesCtrl.getPlacesByUserId);
 
 router.post('/', placesCtrl.createPlace);
 

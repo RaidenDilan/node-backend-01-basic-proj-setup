@@ -18,26 +18,20 @@ let DUMMY_PLACES = [
 
 const getPlaceById = (req, res, next) => {
   const placeId = req.params.placeId; // => { placeId: 'p1' }
-
   const place = DUMMY_PLACES.find(p => p.id === placeId);
-
   if (!place) throw new HttpError('Could not find a place for the provided id.', 404); // for syncronous middle
-
   res.json({ place }); // => { place } => { place: place }
 };
 
-const getPlaceByUserId = (req, res, next) => {
+const getPlacesByUserId = (req, res, next) => {
   const userId = req.params.userId;
-  const place = DUMMY_PLACES.find(p => p.creator === userId);
-
-  if (!place) return next(new HttpError('Could not find a place for the provided user id.', 404)); // for asyncronous middle
-
-  res.json({ place });
+  const places = DUMMY_PLACES.filter(p => p.creator === userId);
+  if (!places || places.length === 0) return next(new HttpError('Could not find places for the provided user id.', 404)); // for asyncronous middle
+  res.json({ places });
 };
 
 const createPlace = (req, res, next) => {
   const { title, description, coordinates, address, creator } = req.body;
-
   const createdPlace = {
     id: uuid(),
     title,
@@ -46,38 +40,30 @@ const createPlace = (req, res, next) => {
     address,
     creator
   };
-
   DUMMY_PLACES.push(createdPlace); // DUMMY_PLACES.unshift(createdPlace);
-
   res.status(201).json({ place: createdPlace });
 };
 
 const updatePlace = (req, res, next) => {
   const { title, description } = req.body;
-
   const placeId = req.params.placeId;
-
   const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }; // Update in a immutable way with { ...DUMMY_PLACES.fine() }
   const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId);
   updatedPlace.title = title;
   updatedPlace.description = description;
-
   DUMMY_PLACES[placeIndex] = updatedPlace; // replace old object with the new updated place.
-
   res.status(200).json({ place: updatedPlace });
 };
 
 const deletePlace = (req, res, next) => {
   const placeId = req.params.placeId;
-
   DUMMY_PLACES = DUMMY_PLACES.filter(p => p.id === placeId); // filter returns new array || immutable.
-
   res.status(200).json({ message: `Deleted Place with the id of : ${ placeId }` });
 };
 
 module.exports = {
   getPlaceById: getPlaceById,
-  getPlaceByUserId: getPlaceByUserId,
+  getPlacesByUserId: getPlacesByUserId,
   createPlace: createPlace,
   updatePlace: updatePlace,
   deletePlace: deletePlace,
