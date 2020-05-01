@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const placesRoutes = require('./routes/places');
 const usersRoutes = require('./routes/users');
 const HttpError = require('./models/http-error');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -23,4 +24,12 @@ app.use((err, req, res, next) => {
   res.json({ message: err.message || 'An unknown error occurred!' });
 });
 
-app.listen(3000);
+mongoose.connect(`mongodb+srv://${ process.env.ATLAS_CLIENT_USERNAME }:${ process.env.ATLAS_CLIENT_PASSWORD }@cluster0-mhonq.mongodb.net/places?retryWrites=true&w=majority`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to DB');
+  app.listen(5000);
+})
+.catch((err) => console.log('DB Connection failed', err));
