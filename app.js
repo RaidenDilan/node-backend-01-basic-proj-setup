@@ -29,7 +29,7 @@ mongoose.connect(`mongodb+srv://${ process.env.ATLAS_CLIENT_USERNAME }:${ proces
   useUnifiedTopology: true
 })
 .then(() => {
-  console.log('Connected to DB');
+  console.log('Connected to database!');
   app.listen(5000);
 })
-.catch((err) => console.log('DB Connection failed', err));
+.catch((err) => console.log('Connection failed!', err));
