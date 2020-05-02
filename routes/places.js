@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const placesCtrl = require('../../controllers/places');
+const placesCtrl = require('../controllers/places');
 
 const router = Router();
 
