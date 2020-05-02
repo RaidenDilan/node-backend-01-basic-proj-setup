@@ -22,7 +22,7 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
   let existingUser;
 
   try {
@@ -42,7 +42,7 @@ const signup = async (req, res, next) => {
     email,
     password,
     image: 'https://cdn4.vectorstock.com/i/1000x1000/64/83/web-developer-avatar-vector-25996483.jpg',
-    places
+    places: []
   });
 
   try {
