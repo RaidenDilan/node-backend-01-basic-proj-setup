@@ -1,7 +1,7 @@
 const axios = require('axios');
 const HttpError = require('../models/http-error');
 
-const API_KEY = 'AIzaSyAPW3x_nhY1Tr2DnKRj7465kOcQ9QgkknA';
+const API_KEY = process.env.MERN_GOOGLE_API_KEY;
 
 async function getCoordinatesForAddress(address) {
   // Dummy location data.
